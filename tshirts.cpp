@@ -1,51 +1,32 @@
 #include <iostream>
-#include <cassert>
+#include <assert.h>
 
-int failureCount = 0;
-
-char categorizeSize(int measurementInCms) {
-    char sizeCategory = '\0';
-    if(measurementInCms < 38) {
-        sizeCategory = 'S';
-    } else if(measurementInCms >= 38 && measurementInCms < 42) {
-        sizeCategory = 'M';
-    } else if(measurementInCms >= 42) {
-        sizeCategory = 'L';
+// Function to determine t-shirt size based on cms measurement
+char determineSize(int cmsMeasurement) {
+    char sizeChar = '\0';
+    if (cmsMeasurement < 38) {
+        sizeChar = 'S'; // Small
+    } else if (cmsMeasurement >= 38 && cmsMeasurement < 42) {
+        sizeChar = 'M'; // Medium
+    } else if (cmsMeasurement >= 42) {
+        sizeChar = 'L'; // Large
     }
-    return sizeCategory;
+    return sizeChar;
 }
 
-void testCategorizeSize() {
-    failureCount = 0;
-
-    // Test cases
-    char result;
-
-    result = categorizeSize(37);
-    if (result != 'S') failureCount++;
-    
-    result = categorizeSize(38);
-    if (result != 'M') failureCount++;
-    
-    result = categorizeSize(41);
-    if (result != 'M') failureCount++;
-    
-    result = categorizeSize(42);
-    if (result != 'L') failureCount++;
-    
-    result = categorizeSize(43);
-    if (result != 'L') failureCount++;
-    
-    std::cout << "FailureCount = " << failureCount << std::endl;
-    assert(failureCount == 0);  // Expect no failures
-    
-    std::cout << "All tests passed successfully!\n";
+// Function to test t-shirt size determination
+void testTshirtSizes() {
+    assert(determineSize(37) == 'S');
+    assert(determineSize(40) == 'M');
+    assert(determineSize(43) == 'L');
+    assert(determineSize(38) == 'M');
+    assert(determineSize(41) == 'M');
+    assert(determineSize(42) == 'L');
+    assert(determineSize(44) == 'L');
 }
 
 int main() {
-    testCategorizeSize();  // Run the test cases
-
-    std::cout << "All is well (maybe!)\n";
+    testTshirtSizes();
+    std::cout << "All tests passed (hopefully!)\n";
     return 0;
 }
-
