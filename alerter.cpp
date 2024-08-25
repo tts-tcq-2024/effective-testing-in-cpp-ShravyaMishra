@@ -1,32 +1,35 @@
 #include <iostream>
-#include <assert.h>
+#include <cassert>
 
-int alertFailureCount = 0;
+int failedAlertCount = 0;
 
-int networkAlertStub(float celcius) {
-    std::cout << "ALERT: Temperature is " << celcius << " celcius.\n";
-    // Return 200 for ok
-    // Return 500 for not-ok
-    // stub always succeeds and returns 200
-    return 200;
+int simulateNetworkAlert(float temperatureInCelsius) {
+    std::cout << "ALERT: Temperature is " << temperatureInCelsius << " Celsius.\n";
+    // Return 200 for OK
+    // Return 500 for not OK
+    if (temperatureInCelsius > 150.0) {
+        return 500; // Simulate failure for temperatures above 150 Celsius
+    }
+    return 200; // Success for all other temperatures
 }
 
-void alertInCelcius(float farenheit) {
-    float celcius = (farenheit - 32) * 5 / 9;
-    int returnCode = networkAlertStub(celcius);
-    if (returnCode != 200) {
-        // non-ok response is not an error! Issues happen in life!
-        // let us keep a count of failures to report
-        // However, this code doesn't count failures!
-        // Add a test below to catch this bug. Alter the stub above, if needed.
-        alertFailureCount += 0;
+void sendAlertInCelsius(float temperatureInFahrenheit) {
+    float temperatureInCelsius = (temperatureInFahrenheit - 32) * 5 / 9;
+    int responseCode = simulateNetworkAlert(temperatureInCelsius);
+    if (responseCode != 200) {
+        // Increment the failure count if the network alert failed
+        failedAlertCount++;
     }
 }
 
 int main() {
-    alertInCelcius(400.5);
-    alertInCelcius(303.6);
-    std::cout << alertFailureCount << " alerts failed.\n";
+    sendAlertInCelsius(400.5);  // This should increment the failure count
+    sendAlertInCelsius(303.6);  // This should also increment the failure count
+    
+    // Test to check if the failure count is correct
+    assert(failedAlertCount == 2); 
+    
+    std::cout << failedAlertCount << " alerts failed.\n";
     std::cout << "All is well (maybe!)\n";
     return 0;
 }
