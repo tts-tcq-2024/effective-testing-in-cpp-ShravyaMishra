@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cassert>
 
-char determineShirtSize(int measurementInCms) {
+char categorizeShirtSize(int measurementInCms) {
     char sizeCategory = '\0';  // Initialize with null character
     if(measurementInCms < 38) {
         sizeCategory = 'S';
@@ -13,11 +13,19 @@ char determineShirtSize(int measurementInCms) {
     return sizeCategory;
 }
 
+void testCategorizeShirtSize() {
+    // Test cases for shirt size categorization
+    assert(categorizeShirtSize(37) == 'S');
+    assert(categorizeShirtSize(40) == 'M');
+    assert(categorizeShirtSize(43) == 'L');
+    assert(categorizeShirtSize(42) == 'L');  // Changed expectation for size 42 based on updated logic
+
+    std::cout << "All tests passed successfully!\n";
+}
+
 int main() {
-    assert(determineShirtSize(37) == 'S');
-    assert(determineShirtSize(40) == 'M');
-    assert(determineShirtSize(43) == 'L');
-    assert(determineShirtSize(42) == 'L');  // Changed expectation for size 42 based on updated logic
+    testCategorizeShirtSize();  // Run the test cases
+
     std::cout << "All is well (maybe!)\n";
     return 0;
 }
