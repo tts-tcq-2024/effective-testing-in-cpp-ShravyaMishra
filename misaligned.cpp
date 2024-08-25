@@ -1,47 +1,47 @@
 #include <iostream>
-#include <cassert>
+#include <assert.h>
+#include <string>
 
-const char* primaryColors[] = {"White", "Red", "Black", "Yellow", "Violet"};
-const char* secondaryColors[] = {"Blue", "Orange", "Green", "Brown", "Slate"};
+std::string colorMapOutputBuffer;
+int majorColorIndex = 0, minorColorIndex = 0;
 
-int generateColorMap() {
-    int primaryIndex = 0, secondaryIndex = 0;
-    for(primaryIndex = 0; primaryIndex < 5; primaryIndex++) {
-        for(secondaryIndex = 0; secondaryIndex < 5; secondaryIndex++) {
-            std::cout << primaryIndex * 5 + secondaryIndex << " | " << primaryColors[primaryIndex] << " | " << secondaryColors[secondaryIndex] << "\n";
-        }
-    }
-    return primaryIndex * secondaryIndex;
+std::string getColorPair(int majorColorIdx, int minorColorIdx) {
+    const char* majorColors[] = {"White", "Red", "Black", "Yellow", "Violet"};
+    const char* minorColors[] = {"Blue", "Orange", "Green", "Brown", "Slate"};
+    return std::to_string(majorColorIdx * 5 + minorColorIdx) + " | " + majorColors[majorColorIdx] + " | " + minorColors[minorColorIdx];
 }
 
-void validateColorMap() {
-    int primaryIndex = 0, secondaryIndex = 0;
-    int index = 0;
-    
-    // Simulate the logic of generateColorMap but with correct expectations
-    for(primaryIndex = 0; primaryIndex < 5; primaryIndex++) {
-        for(secondaryIndex = 0; secondaryIndex < 5; secondaryIndex++) {
-            // Check that the current index corresponds to the correct primary and secondary color
-            std::cout << "Testing: " << index << " | " << primaryColors[primaryIndex] << " | " << secondaryColors[secondaryIndex] << "\n";
-
-            // Ensure that the color pair produced by generateColorMap matches expected logic
-            assert(primaryColors[primaryIndex] == primaryColors[primaryIndex]); // This is correct
-            assert(secondaryColors[secondaryIndex] == secondaryColors[secondaryIndex]); // This is correct
-
-            // Correct comparison between primary and secondary colors
-            assert(primaryColors[primaryIndex] != secondaryColors[secondaryIndex]); 
-            
-            index++;
+void printColorMap() {
+    for (majorColorIndex = 0; majorColorIndex < 5; majorColorIndex++) {
+        for (minorColorIndex = 0; minorColorIndex < 5; minorColorIndex++) {
+            std::cout << getColorPair(majorColorIndex, minorColorIndex) << "\n";
+            colorMapOutputBuffer += getColorPair(majorColorIndex, minorColorIndex) + "\n";
         }
     }
 }
 
-int main() {
-    int result = generateColorMap();
-    assert(result == 25); // This assertion should pass
-
-    validateColorMap();   // Validates the color map logic
-
-    std::cout << "All tests passed successfully!\n";
-    return 0;
-}
+void testColorMap() {
+    std::string expectedOutput =
+        "0 | White | Blue\n"
+        "1 | White | Orange\n"
+        "2 | White | Green\n"
+        "3 | White | Brown\n"
+        "4 | White | Slate\n"
+        "5 | Red | Blue\n"
+        "6 | Red | Orange\n"
+        "7 | Red | Green\n"
+        "8 | Red | Brown\n"
+        "9 | Red | Slate\n"
+        "10 | Black | Blue\n"
+        "11 | Black | Orange\n"
+        "12 | Black | Green\n"
+        "13 | Black | Brown\n"
+        "14 | Black | Slate\n"
+        "15 | Yellow | Blue\n"
+        "16 | Yellow | Orange\n"
+        "17 | Yellow | Green\n"
+        "18 | Yellow | Brown\n"
+        "19 | Yellow | Slate\n"
+        "20 | Violet | Blue\n"
+        "21 | Violet | Orange\n"
+        "22 | Violet | Green\n
