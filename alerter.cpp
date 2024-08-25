@@ -1,35 +1,49 @@
 #include <iostream>
-#include <cassert>
+#include <assert.h>
 
-int failedAlertCount = 0;
+int alertFailureCounter = 0;
 
 int simulateNetworkAlert(float temperatureInCelsius) {
     std::cout << "ALERT: Temperature is " << temperatureInCelsius << " Celsius.\n";
+    if(temperatureInCelsius > 250)
+        return 500;
     // Return 200 for OK
-    // Return 500 for not OK
-    if (temperatureInCelsius > 150.0) {
-        return 500; // Simulate failure for temperatures above 150 Celsius
-    }
-    return 200; // Success for all other temperatures
+    // Return 500 for not-OK
+    return 200;
 }
 
-void sendAlertInCelsius(float temperatureInFahrenheit) {
+void checkAndAlertInCelsius(float temperatureInFahrenheit) {
     float temperatureInCelsius = (temperatureInFahrenheit - 32) * 5 / 9;
     int responseCode = simulateNetworkAlert(temperatureInCelsius);
     if (responseCode != 200) {
-        // Increment the failure count if the network alert failed
-        failedAlertCount++;
+        // Increment the failure count on non-OK response
+        alertFailureCounter++;
     }
 }
 
-int main() {
-    sendAlertInCelsius(400.5);  // This should increment the failure count
-    sendAlertInCelsius(303.6);  // This should also increment the failure count
+void runAlertFailureTests() {
+    alertFailureCounter = 0;
     
-    // Test to check if the failure count is correct
-    assert(failedAlertCount == 2); 
+    // Test cases
+    checkAndAlertInCelsius(200); 
+    std::cout << "AlertFailureCounter = " << alertFailureCounter << std::endl;
+    assert(alertFailureCounter == 1);
     
-    std::cout << failedAlertCount << " alerts failed.\n";
+    checkAndAlertInCelsius(300); 
+    std::cout << "AlertFailureCounter = " << alertFailureCounter << std::endl;
+    assert(alertFailureCounter == 2);
+    
+    checkAndAlertInCelsius(150);   
+    std::cout << "AlertFailureCounter = " << alertFailureCounter << std::endl;
+    assert(alertFailureCounter == 2); 
+
+    std::cout << "All tests passed successfully!\n";
+}
+
+int main() {    
+    runAlertFailureTests();
+
+    std::cout << alertFailureCounter << " alerts failed.\n";
     std::cout << "All is well (maybe!)\n";
     return 0;
 }
