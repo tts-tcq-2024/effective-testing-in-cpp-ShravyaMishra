@@ -1,32 +1,30 @@
 #include <iostream>
 #include <assert.h>
 
-// Function to determine t-shirt size based on cms measurement
-char determineSize(int cmsMeasurement) {
-    char sizeChar = '\0';
-    if (cmsMeasurement < 38) {
-        sizeChar = 'S'; // Small
-    } else if (cmsMeasurement >= 38 && cmsMeasurement < 42) {
-        sizeChar = 'M'; // Medium
-    } else if (cmsMeasurement >= 42) {
-        sizeChar = 'L'; // Large
+char size(int cms) {
+    char sizeName = '\0';
+    if(cms < 38) {
+        sizeName = 'S';
+    } else if(cms > 38 && cms < 42) {
+        sizeName = 'M';
+    } else if(cms > 42) {
+        sizeName = 'L';
     }
-    return sizeChar;
+    return sizeName;
 }
 
-// Function to test t-shirt size determination
-void testTshirtSizes() {
-    assert(determineSize(37) == 'S');
-    assert(determineSize(40) == 'M');
-    assert(determineSize(43) == 'L');
-    assert(determineSize(38) == 'M');
-    assert(determineSize(41) == 'M');
-    assert(determineSize(42) == 'L');
-    assert(determineSize(44) == 'L');
+void testTshirtSizes(){
+    assert(size(37) == 'S');
+    assert(size(40) == 'M');
+    assert(size(43) == 'L');
+    assert(size(38) == 'M');
+    assert(size(38) == 'S');
+    assert(size(42) == 'M');
+    assert(size(42) == 'L');
 }
 
 int main() {
     testTshirtSizes();
-    std::cout << "All tests passed (hopefully!)\n";
+    std::cout << "All is well (maybe!)\n";
     return 0;
 }
