@@ -2,20 +2,20 @@
 #include <assert.h>
 #include <string>
 
-std::string colorMapOutputBuffer;
-int majorColorIndex = 0, minorColorIndex = 0;
+std::string colorMapOutput;
+int i = 0, j = 0;
 
-std::string getColorPair(int majorColorIdx, int minorColorIdx) {
-    const char* majorColors[] = {"White", "Red", "Black", "Yellow", "Violet"};
-    const char* minorColors[] = {"Blue", "Orange", "Green", "Brown", "Slate"};
-    return std::to_string(majorColorIdx * 5 + minorColorIdx) + " | " + majorColors[majorColorIdx] + " | " + minorColors[minorColorIdx];
+std::string getColorPair(int majorColorIndex, int minorColorIndex) {
+    const char* majorColor[] = {"White", "Red", "Black", "Yellow", "Violet"};
+    const char* minorColor[] = {"Blue", "Orange", "Green", "Brown", "Slate"};
+    return std::to_string(majorColorIndex * 5 + minorColorIndex) + " | " + majorColor[majorColorIndex] + " | " + minorColor[majorColorIndex];
 }
 
-void printColorMap() {
-    for (majorColorIndex = 0; majorColorIndex < 5; majorColorIndex++) {
-        for (minorColorIndex = 0; minorColorIndex < 5; minorColorIndex++) {
-            std::cout << getColorPair(majorColorIndex, minorColorIndex) << "\n";
-            colorMapOutputBuffer += getColorPair(majorColorIndex, minorColorIndex) + "\n";
+void printColorMap(){
+    for(i = 0; i < 5; i++) {
+        for(j = 0; j < 5; j++) {
+            std::cout << getColorPair(i, j) << "\n";
+            colorMapOutput = getColorPair(i, j);
         }
     }
 }
@@ -44,4 +44,18 @@ void testColorMap() {
         "19 | Yellow | Slate\n"
         "20 | Violet | Blue\n"
         "21 | Violet | Orange\n"
-        "22 | Violet | Green\n
+        "22 | Violet | Green\n"
+        "23 | Violet | Brown\n"
+        "24 | Violet | Slate\n";
+
+    std::string actualOutput;
+    actualOutput += colorMapOutput;
+
+    assert(actualOutput == expectedOutput);
+}
+
+int main() {
+    testColorMap();
+    std::cout << "All is well (maybe!)\n";
+    return 0;
+}
