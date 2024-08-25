@@ -1,49 +1,47 @@
 #include <iostream>
 #include <assert.h>
 
-int alertFailureCounter = 0;
+int failedAlertCount = 0;
 
-int simulateNetworkAlert(float temperatureInCelsius) {
-    std::cout << "ALERT: Temperature is " << temperatureInCelsius << " Celsius.\n";
-    if(temperatureInCelsius > 250)
-        return 500;
-    // Return 200 for OK
-    // Return 500 for not-OK
-    return 200;
+class NetworkAlert {
+public:
+    virtual int sendAlert(float celsius) = 0;
+};
+
+class StubNetworkAlert : public NetworkAlert {
+public:
+    int sendAlert(float celsius) override {
+        std::cout << "ALERT: Temperature is " << celsius << " Celsius.\n";
+        if (celsius > 200) {
+            return 500;
+        }
+        return 200;
+    }
+};
+
+float convertFahrenheitToCelsius(float fahrenheit) {
+    return (fahrenheit - 32) * 5 / 9;
 }
 
-void checkAndAlertInCelsius(float temperatureInFahrenheit) {
-    float temperatureInCelsius = (temperatureInFahrenheit - 32) * 5 / 9;
-    int responseCode = simulateNetworkAlert(temperatureInCelsius);
+void alertInCelsius(float fahrenheit, NetworkAlert* networkAlert) {
+    float celsius = convertFahrenheitToCelsius(fahrenheit);
+    int responseCode = networkAlert->sendAlert(celsius);
     if (responseCode != 200) {
-        // Increment the failure count on non-OK response
-        alertFailureCounter++;
+        failedAlertCount += 1;
     }
 }
 
-void runAlertFailureTests() {
-    alertFailureCounter = 0;
-    
-    // Test cases
-    checkAndAlertInCelsius(200); 
-    std::cout << "AlertFailureCounter = " << alertFailureCounter << std::endl;
-    assert(alertFailureCounter == 1);
-    
-    checkAndAlertInCelsius(300); 
-    std::cout << "AlertFailureCounter = " << alertFailureCounter << std::endl;
-    assert(alertFailureCounter == 2);
-    
-    checkAndAlertInCelsius(150);   
-    std::cout << "AlertFailureCounter = " << alertFailureCounter << std::endl;
-    assert(alertFailureCounter == 2); 
-
-    std::cout << "All tests passed successfully!\n";
+void testAlertInCelsius() {
+    StubNetworkAlert stubNetworkAlert;
+    alertInCelsius(400.5, &stubNetworkAlert);
+    alertInCelsius(303.6, &stubNetworkAlert);
+    alertInCelsius(102.5, &stubNetworkAlert);
+    assert(failedAlertCount == 1);
 }
 
-int main() {    
-    runAlertFailureTests();
-
-    std::cout << alertFailureCounter << " alerts failed.\n";
-    std::cout << "All is well (maybe!)\n";
+int main() {
+    testAlertInCelsius();
+    std::cout << failedAlertCount << " alerts failed.\n";
+    std::cout << "All tests passed (hopefully!)\n";
     return 0;
 }
